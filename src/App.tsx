@@ -1,5 +1,4 @@
-// filepath: /c:/Users/enesh/Projects/iip-final-tetris-react/src/App.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Board from './components/Board';
 import UpcomingBlocks from './components/UpcomingBlocks';
 import { useTetris } from './hooks/useTetris';
@@ -7,13 +6,13 @@ import videoBg from './assets/27770-365891067.mp4';
 import SettingsModal from './components/Settings';
 import Music from './components/Music';
 import SoundEffect from './components/SoundEffect';
-import TopScoresModal from './components/TopScores'; // Yeni modal bileşeni
-import SaveScoreModal from './components/SaveScore'; // Yeni modal bileşeni
+import TopScoresModal from './components/TopScores'; 
+import SaveScoreModal from './components/SaveScore'; 
 import axios from 'axios';
 
 function App() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showTopScoresModal, setShowTopScoresModal] = useState(false); // Top Scores modal state
+  const [showTopScoresModal, setShowTopScoresModal] = useState(false); 
   const [ShowSaveScoreModal, setShowSaveScoreModal] = useState(false); 
   const [musicKey, setMusicKey] = useState<string>(Date.now().toString());
   const [musicVolume, setMusicVolume] = useState(0.2);
