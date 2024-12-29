@@ -16,7 +16,7 @@ function App() {
   const [showTopScoresModal, setShowTopScoresModal] = useState(false); // Top Scores modal state
   const [ShowSaveScoreModal, setShowSaveScoreModal] = useState(false); 
   const [musicKey, setMusicKey] = useState<string>(Date.now().toString());
-  const [musicVolume, setMusicVolume] = useState(0.5);
+  const [musicVolume, setMusicVolume] = useState(0.2);
   const [soundEffectVolume, setSoundEffectVolume] = useState(0.5);
 
   const fetch10thScore = async () => {
