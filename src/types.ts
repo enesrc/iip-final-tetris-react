@@ -1,3 +1,4 @@
+// Tetris blok türlerini tanımlayan enum
 export enum Block {
   I = 'I',
   J = 'J',
@@ -8,22 +9,28 @@ export enum Block {
   Z = 'Z',
 }
 
+// Boş hücreyi tanımlayan enum
 export enum EmptyCell {
   Empty = 'Empty',
 }
 
+// Hücre seçeneklerini tanımlayan tür (blok veya boş hücre)
 export type CellOptions = Block | EmptyCell;
 
+// Oyun tahtasının şeklini tanımlayan tür (iki boyutlu hücre dizisi)
 export type BoardShape = CellOptions[][];
 
+// Blok şekillerini tanımlayan tür (iki boyutlu boolean dizisi)
 export type BlockShape = boolean[][];
 
+// Blok şekillerini içeren nesneyi tanımlayan tür
 type ShapesObj = {
   [key in Block]: {
     shape: BlockShape;
   };
 };
 
+// Tetris blok şekillerini tanımlayan nesne
 export const SHAPES: ShapesObj = {
   I: {
     shape: [

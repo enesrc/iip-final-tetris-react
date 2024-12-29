@@ -1,4 +1,3 @@
-// filepath: /c:/Users/enesh/Projects/iip-final-tetris-react/src/hooks/useTetris.ts
 import { useCallback, useEffect, useState } from 'react';
 import { Block, BlockShape, BoardShape, EmptyCell, SHAPES } from '../types';
 import { useInterval } from './useInterval';
@@ -10,33 +9,36 @@ import {
   getRandomBlock,
 } from './useTetrisBoard';
 
+// Blok düşme hızlarını tanımlayan enum
 enum TickSpeed {
   Normal = 800,
   Sliding = 100,
   Fast = 50,
 }
 
+// useTetris hook'u, Tetris oyununun ana mantığını yönetir
 export function useTetris(onGameOver: () => void) {
-  const [score, setScore] = useState(0);
-  const [line, setLine] = useState(0);
-  const [upcomingBlocks, setUpcomingBlocks] = useState<Block[]>([]);
-  const [isCommitting, setIsCommitting] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [tickSpeed, setTickSpeed] = useState<TickSpeed | null>(null);
+  const [score, setScore] = useState(0); // Skor state'i
+  const [line, setLine] = useState(0); // Temizlenen satır sayısı state'i
+  const [upcomingBlocks, setUpcomingBlocks] = useState<Block[]>([]); // Sıradaki bloklar state'i
+  const [isCommitting, setIsCommitting] = useState(false); // Blok yerleştirme durumu state'i
+  const [isPlaying, setIsPlaying] = useState(false); // Oyun oynanıyor mu state'i
+  const [isPaused, setIsPaused] = useState(false); // Oyun duraklatıldı mı state'i
+  const [tickSpeed, setTickSpeed] = useState<TickSpeed | null>(null); // Blok düşme hızı state'i
   const [keyBindings, setKeyBindings] = useState({
     left: 'ArrowLeft',
     right: 'ArrowRight',
     down: 'ArrowDown',
     rotate: 'ArrowUp',
-  });
-  const [playSoundEffect, setPlaySoundEffect] = useState(false);
+  }); // Tuş atamaları state'i
+  const [playSoundEffect, setPlaySoundEffect] = useState(false); // Ses efekti çalma durumu state'i
 
   const [
     { board, droppingRow, droppingColumn, droppingBlock, droppingShape },
     dispatchBoardState,
-  ] = useTetrisBoard();
+  ] = useTetrisBoard(); // Tetris tahtası ve düşen blok state'leri
 
+  // Oyunu başlatma fonksiyonu
   const startGame = useCallback(() => {
     const startingBlocks = [
       getRandomBlock(),
@@ -53,16 +55,19 @@ export function useTetris(onGameOver: () => void) {
     dispatchBoardState({ type: 'start' });
   }, [dispatchBoardState]);
 
+  // Oyunu duraklatma fonksiyonu
   const pauseGame = useCallback(() => {
     setIsPaused(true);
     setTickSpeed(null);
   }, []);
 
+  // Oyunu devam ettirme fonksiyonu
   const resumeGame = useCallback(() => {
     setIsPaused(false);
     setTickSpeed(TickSpeed.Normal);
   }, []);
 
+  // Blok yerleştirme fonksiyonu
   const commitPosition = useCallback(() => {
     if (!hasCollisions(board, droppingShape, droppingRow + 1, droppingColumn)) {
       setIsCommitting(false);
@@ -121,6 +126,7 @@ export function useTetris(onGameOver: () => void) {
     onGameOver,
   ]);
 
+  // Oyun tick fonksiyonu
   const gameTick = useCallback(() => {
     if (isCommitting) {
       commitPosition();
@@ -142,6 +148,7 @@ export function useTetris(onGameOver: () => void) {
     isCommitting,
   ]);
 
+  // Interval kullanarak oyun tick'ini yönet
   useInterval(() => {
     if (!isPlaying || isPaused) {
       return;
@@ -149,6 +156,7 @@ export function useTetris(onGameOver: () => void) {
     gameTick();
   }, tickSpeed);
 
+  // Klavye olaylarını yönet
   useEffect(() => {
     if (!isPlaying || isPaused) {
       return;
@@ -254,6 +262,7 @@ export function useTetris(onGameOver: () => void) {
   };
 }
 
+// Temizlenen satır sayısına göre puan hesaplama fonksiyonu
 function getPoints(numCleared: number): number {
   switch (numCleared) {
     case 0:
@@ -271,6 +280,7 @@ function getPoints(numCleared: number): number {
   }
 }
 
+// Blokları tahtaya ekleme fonksiyonu
 function addShapeToBoard(
   board: BoardShape,
   droppingBlock: Block,

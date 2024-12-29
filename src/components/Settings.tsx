@@ -1,33 +1,37 @@
 import React from 'react';
 
+// SettingsModal bileşeni için prop türlerini tanımlayın
 interface ModalProps {
-    show: boolean;
-    onClose: () => void;
-    onContinue: () => void;
-    musicVolume: number;
-    onMusicVolumeChange: (musicVolume: number) => void;
-    soundEffectVolume: number;
-    onSoundEffectVolumeChange: (soundEffectVolume: number) => void;
-    keyBindings: { left: string; right: string; down: string; rotate: string };
-    onKeyBindingChange: (key: string, value: string) => void;
-    isPlaying: boolean;
+    show: boolean; // Modal'ın gösterilip gösterilmeyeceğini belirten prop
+    onClose: () => void; // Modal'ı kapatmak için kullanılacak fonksiyon
+    onContinue: () => void; // Oyuna devam etmek için kullanılacak fonksiyon
+    musicVolume: number; // Müzik sesi seviyesi
+    onMusicVolumeChange: (musicVolume: number) => void; // Müzik sesi seviyesini değiştirmek için kullanılacak fonksiyon
+    soundEffectVolume: number; // Ses efekti seviyesi
+    onSoundEffectVolumeChange: (soundEffectVolume: number) => void; // Ses efekti seviyesini değiştirmek için kullanılacak fonksiyon
+    keyBindings: { left: string; right: string; down: string; rotate: string }; // Tuş atamaları
+    onKeyBindingChange: (key: string, value: string) => void; // Tuş atamalarını değiştirmek için kullanılacak fonksiyon
+    isPlaying: boolean; // Oyun oynanıyor mu?
 }
 
+// SettingsModal bileşenini tanımlayın
 const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, musicVolume, onMusicVolumeChange, soundEffectVolume, onSoundEffectVolumeChange, keyBindings, onKeyBindingChange }) => {
-    if (!show) return null;
+    if (!show) return null; // Modal gösterilmeyecekse null döndür
 
+    // Müzik sesi seviyesini değiştirmek için kullanılan fonksiyon
     const handleMusicVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onMusicVolumeChange(parseFloat(event.target.value));
     };
 
+    // Ses efekti seviyesini değiştirmek için kullanılan fonksiyon
     const handleSoundEffectVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         onSoundEffectVolumeChange(parseFloat(event.target.value));
     };
 
+    // Tuş atamalarını değiştirmek için kullanılan fonksiyon
     const handleKeyBindingChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         onKeyBindingChange(key, event.target.value);
     };
-
 
     return (
         <div className="modal-overlay">
@@ -100,12 +104,12 @@ const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, musicV
                     />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-                    <button onClick={onContinue} className="continue-button">Oyuna Devam</button>
-                    <button onClick={onClose} className="close-button">Kapat</button>
+                    <button onClick={onContinue} className="continue-button">Oyuna Devam</button> {/* Oyuna devam etmek için buton */}
+                    <button onClick={onClose} className="close-button">Kapat</button> {/* Modal'ı kapatmak için buton */}
                 </div>
             </div>
         </div>
     );
 };
 
-export default SettingsModal;
+export default SettingsModal; // SettingsModal bileşenini dışa aktar

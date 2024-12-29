@@ -32,7 +32,7 @@ app.get('/tenthscore', (req, res) => {
     }
     res.json(rows);
   });
-});
+});   
 
 app.post('/scores', (req, res) => {
   const { name, score } = req.body;

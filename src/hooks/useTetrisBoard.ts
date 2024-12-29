@@ -1,17 +1,19 @@
 import { useReducer, Dispatch } from 'react';
 import { Block, BlockShape, BoardShape, EmptyCell, SHAPES } from '../types';
 
-export const BOARD_WIDTH = 10;
-export const BOARD_HEIGHT = 20;
+export const BOARD_WIDTH = 10; // Oyun tahtasının genişliği
+export const BOARD_HEIGHT = 20; // Oyun tahtasının yüksekliği
 
+// Oyun tahtası durumunu tanımlayan tür
 type BoardState = {
-  board: BoardShape;
-  droppingRow: number;
-  droppingColumn: number;
-  droppingBlock: Block;
-  droppingShape: BlockShape;
+  board: BoardShape; // Oyun tahtası
+  droppingRow: number; // Düşen bloğun satır konumu
+  droppingColumn: number; // Düşen bloğun sütun konumu
+  droppingBlock: Block; // Düşen blok türü
+  droppingShape: BlockShape; // Düşen bloğun şekli
 };
 
+// useTetrisBoard hook'u, oyun tahtası durumunu ve dispatch fonksiyonunu döndürür
 export function useTetrisBoard(): [BoardState, Dispatch<Action>] {
   const [boardState, dispatchBoardState] = useReducer(
     boardReducer,
@@ -34,12 +36,14 @@ export function useTetrisBoard(): [BoardState, Dispatch<Action>] {
   return [boardState, dispatchBoardState];
 }
 
+// Boş bir oyun tahtası oluşturur
 export function getEmptyBoard(height = BOARD_HEIGHT): BoardShape {
   return Array(height)
     .fill(null)
     .map(() => Array(BOARD_WIDTH).fill(EmptyCell.Empty));
 }
 
+// Çarpışma kontrolü yapar
 export function hasCollisions(
   board: BoardShape,
   currentShape: BlockShape,
@@ -65,11 +69,13 @@ export function hasCollisions(
   return hasCollision;
 }
 
+// Rastgele bir blok döndürür
 export function getRandomBlock(): Block {
   const blockValues = Object.values(Block);
   return blockValues[Math.floor(Math.random() * blockValues.length)] as Block;
 }
 
+// Blok şekillerini döndürür
 function rotateBlock(shape: BlockShape): BlockShape {
   const rows = shape.length;
   const columns = shape[0].length;
@@ -87,6 +93,7 @@ function rotateBlock(shape: BlockShape): BlockShape {
   return rotated;
 }
 
+// Oyun tahtası için eylem türlerini tanımlar
 type Action = {
   type: 'start' | 'drop' | 'commit' | 'move';
   newBoard?: BoardShape;
@@ -96,6 +103,7 @@ type Action = {
   isRotating?: boolean;
 };
 
+// Oyun tahtası durumunu yöneten reducer fonksiyonu
 function boardReducer(state: BoardState, action: Action): BoardState {
   let newState = { ...state };
 

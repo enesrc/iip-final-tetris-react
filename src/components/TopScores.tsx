@@ -1,13 +1,14 @@
-// filepath: /c:/Users/enesh/Projects/iip-final-tetris-react/src/components/TopScores.tsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+// TopScoresModal bileşeni için prop türlerini tanımlayın
 interface TopScoresModalProps {
-    show: boolean;
-    onClose: () => void;
-    startGame: () => void;
+    show: boolean; // Modal'ın gösterilip gösterilmeyeceğini belirten prop
+    onClose: () => void; // Modal'ı kapatmak için kullanılacak fonksiyon
+    startGame: () => void; // Oyunu yeniden başlatmak için kullanılacak fonksiyon
 }
 
+// TopScoresModal bileşenini tanımlayın
 const TopScoresModal: React.FC<TopScoresModalProps> = ({ show, onClose, startGame }) => {
     const [scores, setScores] = useState<{ id: number, name: string, score: number }[]>([]); // Skor listesi
 
@@ -16,6 +17,7 @@ const TopScoresModal: React.FC<TopScoresModalProps> = ({ show, onClose, startGam
         fetchScores();
     }, [show]);
 
+    // Skorları backend'den almak için kullanılan fonksiyon
     const fetchScores = async () => {
         try {
             const response = await axios.get('http://localhost:3001/scores');
@@ -26,7 +28,7 @@ const TopScoresModal: React.FC<TopScoresModalProps> = ({ show, onClose, startGam
     };
 
     if (!show) {
-        return null;
+        return null; // Modal gösterilmeyecekse null döndür
     }
 
     return (
@@ -47,12 +49,12 @@ const TopScoresModal: React.FC<TopScoresModalProps> = ({ show, onClose, startGam
                     </table>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                    <button className='close-button' style={{ backgroundColor:"red" }} onClick={onClose}>Kapat</button>
-                    <button className='close-button' style={{ backgroundColor:"blue" }} onClick={startGame}>Yeniden Oyna</button>
+                    <button className='close-button' style={{ backgroundColor:"red" }} onClick={onClose}>Kapat</button> {/* Modal'ı kapatmak için buton */}
+                    <button className='close-button' style={{ backgroundColor:"blue" }} onClick={startGame}>Yeniden Oyna</button> {/* Oyunu yeniden başlatmak için buton */}
                 </div>
             </div>
         </div>
     );
 };
 
-export default TopScoresModal;
+export default TopScoresModal; // TopScoresModal bileşenini dışa aktar
