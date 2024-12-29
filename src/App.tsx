@@ -32,9 +32,6 @@ function App() {
 
   const handleGameOver = async () => {
     const fetchedTenthScore = await fetch10thScore();
-    console.log('10. skor: ' + fetchedTenthScore);
-    console.log('yeni skor: ' + score);
-    console.log(score > fetchedTenthScore);
     if (score > fetchedTenthScore) {
       setShowSaveScoreModal(true);
     } else {
