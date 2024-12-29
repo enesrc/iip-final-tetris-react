@@ -5,19 +5,15 @@ import axios from 'axios';
 interface TopScoresModalProps {
     show: boolean;
     onClose: () => void;
-    scores: { id: number, name: string, score: number }[];
+    startGame: () => void;
 }
 
-const TopScoresModal: React.FC<TopScoresModalProps> = ({ show, onClose }) => {
+const TopScoresModal: React.FC<TopScoresModalProps> = ({ show, onClose, startGame }) => {
     const [scores, setScores] = useState<{ id: number, name: string, score: number }[]>([]); // Skor listesi
-    const [name, setName] = useState(''); // Kullanıcı adı
-    const [score, setScore] = useState(''); // Kullanıcı skoru
 
     // Skorları backend'den al
     useEffect(() => {
-        if (show) {
-            fetchScores();
-        }
+        fetchScores();
     }, [show]);
 
     const fetchScores = async () => {
@@ -26,22 +22,6 @@ const TopScoresModal: React.FC<TopScoresModalProps> = ({ show, onClose }) => {
             setScores(response.data);
         } catch (error) {
             console.error('Skorları alırken hata oluştu:', error);
-        }
-    };
-
-    // Yeni bir skor ekle
-    const addScore = async () => {
-        if (!name || !score) {
-            alert('Lütfen adınızı ve skorunuzu girin.');
-            return;
-        }
-        try {
-            await axios.post('http://localhost:3001/scores', { name, score: parseInt(score, 10) });
-            setName('');
-            setScore('');
-            fetchScores(); // Skor listesini güncelle
-        } catch (error) {
-            console.error('Skor eklerken hata oluştu:', error);
         }
     };
 
@@ -58,13 +38,17 @@ const TopScoresModal: React.FC<TopScoresModalProps> = ({ show, onClose }) => {
                         <tbody>
                             {scores.map((s, index) => (
                                 <tr key={s.id}>
-                                    <td>{index + 1}.</td>
-                                    <td>{s.name}</td>
+                                    <td style={{color:"red"}}>{index + 1}.</td>
+                                    <td style={{color:"yellow"}}>{s.name}</td>
                                     <td>{s.score}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <button className='close-button' style={{ backgroundColor:"red" }} onClick={onClose}>Kapat</button>
+                    <button className='close-button' style={{ backgroundColor:"blue" }} onClick={startGame}>Yeniden Oyna</button>
                 </div>
             </div>
         </div>

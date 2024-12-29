@@ -23,6 +23,10 @@ button {
   padding: 4px;
 }
 
+p{
+  margin: 4px;
+}
+
 .board {
   border-bottom: 6px solid white;
   border-top: 6px solid white;
@@ -196,6 +200,17 @@ button {
   width: 100px;
 }
 
+.scoreSaveButton {
+  background-color: rgb(0, 0, 255);
+  border: 5px solid white;
+  border-radius: 5px;
+  font-family: monospace;
+  font-size: large;
+  font-weight: bold;
+  color: white;
+  width: 100px;
+}
+
 
 .modal-overlay {
   position: fixed;
@@ -211,10 +226,10 @@ button {
 }
 
 .modal {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.3);
   padding: 20px;
   border-radius: 8px;
-  max-width: 300px;
+  max-width: 330px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   display: flex;

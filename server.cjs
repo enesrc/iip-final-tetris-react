@@ -17,7 +17,16 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/scores', (req, res) => {
-  db.all("SELECT * FROM scores ORDER BY score DESC", [], (err, rows) => {
+  db.all("SELECT * FROM scores ORDER BY score DESC LIMIT 10", [], (err, rows) => {
+    if (err) {
+      throw err;
+    }
+    res.json(rows);
+  });
+});
+
+app.get('/tenthscore', (req, res) => {
+  db.all("SELECT * FROM scores ORDER BY score DESC LIMIT 1 OFFSET 9", [], (err, rows) => {
     if (err) {
       throw err;
     }
@@ -33,6 +42,7 @@ app.post('/scores', (req, res) => {
     }
     res.json({ id: this.lastID });
   });
+  db.run("DELETE FROM scores WHERE id IN (SELECT id FROM scores ORDER BY score ASC LIMIT 1)");
 });
 
 app.listen(port, () => {

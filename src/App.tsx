@@ -1,5 +1,5 @@
 // filepath: /c:/Users/enesh/Projects/iip-final-tetris-react/src/App.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Board from './components/Board';
 import UpcomingBlocks from './components/UpcomingBlocks';
 import { useTetris } from './hooks/useTetris';
@@ -7,44 +7,49 @@ import videoBg from './assets/27770-365891067.mp4';
 import SettingsModal from './components/Settings';
 import Music from './components/Music';
 import TopScoresModal from './components/TopScores'; // Yeni modal bileşeni
+import SaveScoreModal from './components/SaveScore'; // Yeni modal bileşeni
+import axios from 'axios';
 
 function App() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showTopScoresModal, setShowTopScoresModal] = useState(false); // Top Scores modal state
+  const [ShowSaveScoreModal, setShowSaveScoreModal] = useState(false); 
   const [musicKey, setMusicKey] = useState<string>(Date.now().toString());
   const [volume, setVolume] = useState(0.5);
-  const [scores, setScores] = useState<{ id: number, name: string, score: number }[]>([]);
-  //const [playerName, setPlayerName] = useState<string>('');
 
-  const handleGameOver = () => {
-    setShowTopScoresModal(true);
+  const fetch10thScore = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/tenthscore');
+      if (response.data.length > 0) {
+        return response.data[0].score;
+      }
+      return 0;
+    } catch (error) {
+      console.error('Skorları alırken hata oluştu:', error);
+      return 0;
+    }
+  };
+
+  const handleGameOver = async () => {
+    const fetchedTenthScore = await fetch10thScore();
+    console.log('10. skor: ' + fetchedTenthScore);
+    console.log('yeni skor: ' + score);
+    console.log(score > fetchedTenthScore);
+    if (score > fetchedTenthScore) {
+      setShowSaveScoreModal(true);
+    } else {
+      setShowTopScoresModal(true);
+    }
   };
 
   const { board, startGame, pauseGame, resumeGame, isPlaying, isPaused, score, upcomingBlocks, line, keyBindings, setKeyBindings } = useTetris(handleGameOver);
 
-  useEffect(() => {
-    fetch('http://localhost:3001/scores')
-      .then(response => response.json())
-      .then(data => setScores(data));
-  }, []);
-
-  /*const saveScore = (name: string, score: number) => {
-    fetch('http://localhost:3001/scores', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, score }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      setScores(prevScores => [...prevScores, { id: data.id, name, score }]);
-    });
-  };*/
-
   const handleStartGame = () => {
     startGame();
     setMusicKey(Date.now().toString());
+    setShowTopScoresModal(false);
+    setShowSaveScoreModal(false);
+    setShowSettingsModal(false);
   };
 
   const handleKeyBindingChange = (key: string, value: string) => {
@@ -53,12 +58,6 @@ function App() {
       [key]: value,
     }));
   };
-
-  /*const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    saveScore(playerName, score);
-    setPlayerName('');
-  };*/
 
   const openModal = () => {
     setShowSettingsModal(true);
@@ -82,8 +81,8 @@ function App() {
   return (
     <div className="app">
       <Music key={musicKey} isPlaying={isPlaying && !isPaused} volume={volume} />
-      <video src={videoBg} autoPlay loop muted style={{ zIndex: -1, position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover'}}></video>
-      <h1 style={{margin: "5px 0"}}>Tetris</h1>
+      <video src={videoBg} autoPlay loop muted style={{ zIndex: -1, position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}></video>
+      <h1 style={{ margin: "5px 0" }}>Tetris</h1>
       <Board currentBoard={board} />
 
       <div className="controls">
@@ -126,11 +125,16 @@ function App() {
         onKeyBindingChange={handleKeyBindingChange}
         isPlaying={isPlaying}
       />
+      <SaveScoreModal
+        show={ShowSaveScoreModal}
+        onClose={() => {setShowSaveScoreModal(false); setShowTopScoresModal(true);}}
+        score={score}
+      />
 
       <TopScoresModal
         show={showTopScoresModal}
         onClose={() => setShowTopScoresModal(false)}
-        scores={scores}
+        startGame={handleStartGame}
       />
     </div>
   );
