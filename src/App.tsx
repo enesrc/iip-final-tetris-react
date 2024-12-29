@@ -6,6 +6,7 @@ import { useTetris } from './hooks/useTetris';
 import videoBg from './assets/27770-365891067.mp4';
 import SettingsModal from './components/Settings';
 import Music from './components/Music';
+import SoundEffect from './components/SoundEffect';
 import TopScoresModal from './components/TopScores'; // Yeni modal bileşeni
 import SaveScoreModal from './components/SaveScore'; // Yeni modal bileşeni
 import axios from 'axios';
@@ -15,7 +16,8 @@ function App() {
   const [showTopScoresModal, setShowTopScoresModal] = useState(false); // Top Scores modal state
   const [ShowSaveScoreModal, setShowSaveScoreModal] = useState(false); 
   const [musicKey, setMusicKey] = useState<string>(Date.now().toString());
-  const [volume, setVolume] = useState(0.5);
+  const [musicVolume, setMusicVolume] = useState(0.5);
+  const [soundEffectVolume, setSoundEffectVolume] = useState(0.5);
 
   const fetch10thScore = async () => {
     try {
@@ -39,7 +41,7 @@ function App() {
     }
   };
 
-  const { board, startGame, pauseGame, resumeGame, isPlaying, isPaused, score, upcomingBlocks, line, keyBindings, setKeyBindings } = useTetris(handleGameOver);
+  const { board, startGame, pauseGame, resumeGame, isPlaying, isPaused, score, upcomingBlocks, line, keyBindings, setKeyBindings, playSoundEffect } = useTetris(handleGameOver);
 
   const handleStartGame = () => {
     startGame();
@@ -77,7 +79,9 @@ function App() {
 
   return (
     <div className="app">
-      <Music key={musicKey} isPlaying={isPlaying && !isPaused} volume={volume} />
+      <Music key={musicKey} isPlaying={isPlaying && !isPaused} volume={musicVolume} />
+      <SoundEffect volume={soundEffectVolume} play={playSoundEffect} />
+
       <video src={videoBg} autoPlay loop muted style={{ zIndex: -1, position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}></video>
       <h1 style={{ margin: "5px 0" }}>Tetris</h1>
       <Board currentBoard={board} />
@@ -116,8 +120,10 @@ function App() {
         show={showSettingsModal}
         onClose={closeModal}
         onContinue={closeModalAndContinue}
-        volume={volume}
-        onVolumeChange={setVolume}
+        musicVolume={musicVolume}
+        onMusicVolumeChange={setMusicVolume}
+        soundEffectVolume={soundEffectVolume}
+        onSoundEffectVolumeChange={setSoundEffectVolume}
         keyBindings={keyBindings}
         onKeyBindingChange={handleKeyBindingChange}
         isPlaying={isPlaying}

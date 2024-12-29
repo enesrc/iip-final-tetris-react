@@ -4,18 +4,24 @@ interface ModalProps {
     show: boolean;
     onClose: () => void;
     onContinue: () => void;
-    volume: number;
-    onVolumeChange: (volume: number) => void;
+    musicVolume: number;
+    onMusicVolumeChange: (musicVolume: number) => void;
+    soundEffectVolume: number;
+    onSoundEffectVolumeChange: (soundEffectVolume: number) => void;
     keyBindings: { left: string; right: string; down: string; rotate: string };
     onKeyBindingChange: (key: string, value: string) => void;
     isPlaying: boolean;
 }
 
-const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, volume, onVolumeChange, keyBindings, onKeyBindingChange }) => {
+const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, musicVolume, onMusicVolumeChange, soundEffectVolume, onSoundEffectVolumeChange, keyBindings, onKeyBindingChange }) => {
     if (!show) return null;
 
-    const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        onVolumeChange(parseFloat(event.target.value));
+    const handleMusicVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        onMusicVolumeChange(parseFloat(event.target.value));
+    };
+
+    const handleSoundEffectVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        onSoundEffectVolumeChange(parseFloat(event.target.value));
     };
 
     const handleKeyBindingChange = (key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +34,7 @@ const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, volume
             <div className="modal">
                 <h1 className='title'>Ayarlar</h1>
                 <div>
-                    <label htmlFor="volume">Ses Seviyesi: </label>
+                    <label htmlFor="volume">Müzik Seviyesi: </label>
                     <input
                         type="range"
                         id="volume"
@@ -36,8 +42,21 @@ const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, volume
                         min="0"
                         max="1"
                         step="0.01"
-                        value={volume}
-                        onChange={handleVolumeChange}
+                        value={musicVolume}
+                        onChange={handleMusicVolumeChange}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="volume">Ses Efekti Seviyesi: </label>
+                    <input
+                        type="range"
+                        id="volume"
+                        name="volume"
+                        min="0"
+                        max="1"
+                        step="0.01"
+                        value={soundEffectVolume}
+                        onChange={handleSoundEffectVolumeChange}
                     />
                 </div>
                 <div>

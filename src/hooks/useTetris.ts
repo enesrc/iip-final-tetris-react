@@ -30,6 +30,7 @@ export function useTetris(onGameOver: () => void) {
     down: 'ArrowDown',
     rotate: 'ArrowUp',
   });
+  const [playSoundEffect, setPlaySoundEffect] = useState(false);
 
   const [
     { board, droppingRow, droppingColumn, droppingBlock, droppingShape },
@@ -77,6 +78,9 @@ export function useTetris(onGameOver: () => void) {
       droppingRow,
       droppingColumn
     );
+
+    setPlaySoundEffect(true);
+    setTimeout(() => setPlaySoundEffect(false), 100);
 
     let numCleared = 0;
     for (let row = BOARD_HEIGHT - 1; row >= 0; row--) {
@@ -246,6 +250,7 @@ export function useTetris(onGameOver: () => void) {
     line,
     keyBindings,
     setKeyBindings,
+    playSoundEffect
   };
 }
 
