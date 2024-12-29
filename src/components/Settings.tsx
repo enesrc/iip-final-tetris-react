@@ -26,7 +26,7 @@ const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, volume
     return (
         <div className="modal-overlay">
             <div className="modal">
-                <h1>Ayarlar</h1>
+                <h1 className='title'>Ayarlar</h1>
                 <div>
                     <label htmlFor="volume">Ses Seviyesi: </label>
                     <input

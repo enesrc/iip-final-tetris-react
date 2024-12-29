@@ -1,3 +1,4 @@
+// filepath: /c:/Users/enesh/Projects/iip-final-tetris-react/src/hooks/useTetris.ts
 import { useCallback, useEffect, useState } from 'react';
 import { Block, BlockShape, BoardShape, EmptyCell, SHAPES } from '../types';
 import { useInterval } from './useInterval';
@@ -15,7 +16,7 @@ enum TickSpeed {
   Fast = 50,
 }
 
-export function useTetris() {
+export function useTetris(onGameOver: () => void) {
   const [score, setScore] = useState(0);
   const [line, setLine] = useState(0);
   const [upcomingBlocks, setUpcomingBlocks] = useState<Block[]>([]);
@@ -92,6 +93,7 @@ export function useTetris() {
     if (hasCollisions(board, SHAPES[newBlock].shape, 0, 3)) {
       setIsPlaying(false);
       setTickSpeed(null);
+      onGameOver(); // Oyun bittiğinde callback'i çağır
     } else {
       setTickSpeed(TickSpeed.Normal);
     }
@@ -112,6 +114,7 @@ export function useTetris() {
     droppingRow,
     droppingShape,
     upcomingBlocks,
+    onGameOver,
   ]);
 
   const gameTick = useCallback(() => {

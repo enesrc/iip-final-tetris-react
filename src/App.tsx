@@ -1,17 +1,65 @@
+// filepath: /c:/Users/enesh/Projects/iip-final-tetris-react/src/App.tsx
+import React, { useState, useEffect } from 'react';
 import Board from './components/Board';
 import UpcomingBlocks from './components/UpcomingBlocks';
 import { useTetris } from './hooks/useTetris';
 import videoBg from './assets/27770-365891067.mp4';
 import SettingsModal from './components/Settings';
-import { useState } from 'react';
-import Music from './components/Music'; 
+import Music from './components/Music';
+import TopScoresModal from './components/TopScores'; // Yeni modal bileşeni
 
 function App() {
-  const { board, startGame, pauseGame, resumeGame, isPlaying, isPaused, score, upcomingBlocks, line, keyBindings, setKeyBindings } = useTetris();
-  const [showSettingsModal, setShowSettingsModal] = useState(false); // Modal görünürlüğü için state
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showTopScoresModal, setShowTopScoresModal] = useState(false); // Top Scores modal state
   const [musicKey, setMusicKey] = useState<string>(Date.now().toString());
   const [volume, setVolume] = useState(0.5);
-  
+  const [scores, setScores] = useState<{ id: number, name: string, score: number }[]>([]);
+  //const [playerName, setPlayerName] = useState<string>('');
+
+  const handleGameOver = () => {
+    setShowTopScoresModal(true);
+  };
+
+  const { board, startGame, pauseGame, resumeGame, isPlaying, isPaused, score, upcomingBlocks, line, keyBindings, setKeyBindings } = useTetris(handleGameOver);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/scores')
+      .then(response => response.json())
+      .then(data => setScores(data));
+  }, []);
+
+  /*const saveScore = (name: string, score: number) => {
+    fetch('http://localhost:3001/scores', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, score }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      setScores(prevScores => [...prevScores, { id: data.id, name, score }]);
+    });
+  };*/
+
+  const handleStartGame = () => {
+    startGame();
+    setMusicKey(Date.now().toString());
+  };
+
+  const handleKeyBindingChange = (key: string, value: string) => {
+    setKeyBindings((prevBindings) => ({
+      ...prevBindings,
+      [key]: value,
+    }));
+  };
+
+  /*const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    saveScore(playerName, score);
+    setPlayerName('');
+  };*/
+
   const openModal = () => {
     setShowSettingsModal(true);
     if (isPlaying && !isPaused) {
@@ -30,22 +78,11 @@ function App() {
       pauseGame();
     }
   };
-  const handleStartGame = () => {
-    startGame();
-    setMusicKey(Date.now().toString()); // Music bileşenini yeniden oluşturmak için key'i güncelle
-  };
-  const handleKeyBindingChange = (key: string, value: string) => {
-    setKeyBindings((prevBindings) => ({
-      ...prevBindings,
-      [key]: value,
-    }));
-  };
 
   return (
     <div className="app">
       <Music key={musicKey} isPlaying={isPlaying && !isPaused} volume={volume} />
-
-      <video src={videoBg} autoPlay loop muted style={{ zIndex: -1, position: 'absolute', width: '100%' }}></video>
+      <video src={videoBg} autoPlay loop muted style={{ zIndex: -1, position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover'}}></video>
       <h1 style={{margin: "5px 0"}}>Tetris</h1>
       <Board currentBoard={board} />
 
@@ -89,8 +126,14 @@ function App() {
         onKeyBindingChange={handleKeyBindingChange}
         isPlaying={isPlaying}
       />
+
+      <TopScoresModal
+        show={showTopScoresModal}
+        onClose={() => setShowTopScoresModal(false)}
+        scores={scores}
+      />
     </div>
   );
 }
-  
+
 export default App;
