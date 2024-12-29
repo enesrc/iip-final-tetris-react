@@ -11,7 +11,7 @@ interface ModalProps {
     isPlaying: boolean;
 }
 
-const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, volume, onVolumeChange, keyBindings, onKeyBindingChange, isPlaying }) => {
+const SettingsModal: React.FC<ModalProps> = ({ show, onClose, onContinue, volume, onVolumeChange, keyBindings, onKeyBindingChange }) => {
     if (!show) return null;
 
     const handleVolumeChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -3,7 +3,7 @@ import UpcomingBlocks from './components/UpcomingBlocks';
 import { useTetris } from './hooks/useTetris';
 import videoBg from './assets/27770-365891067.mp4';
 import SettingsModal from './components/Settings';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Music from './components/Music'; 
 
 function App() {
